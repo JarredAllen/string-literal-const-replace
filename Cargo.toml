@@ -16,3 +16,10 @@ syn = "2.0.98"
 
 [lib]
 proc-macro = true
+
+[lints.rust]
+unsafe-code = "forbid"
+
+[lints.clippy]
+cargo = "warn"
+pedantic = "warn"
