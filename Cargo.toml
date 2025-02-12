@@ -1,7 +1,13 @@
 [package]
 name = "string-literal-const-replace"
+authors = ["Jarred Allen <jarredallen73@gmail.com"]
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/JarredAllen/string-literal-const-replace"
+description = "Proc macro for compile-time find/replace on string literals"
+license = "MIT or Apache-2.0"
+categories = ["rust-patterns"]
+keywords = ["macro", "string"]
 
 [dependencies]
 proc-macro2 = "1.0.93"
