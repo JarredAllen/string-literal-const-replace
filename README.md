@@ -7,3 +7,12 @@ macro.
 
 Note that this macro is nightly-only as it relies on the
 [`proc_macro_expand`](https://github.com/rust-lang/rust/issues/90765) unstable feature.
+
+Example of use:
+
+```rust
+assert_eq!(
+    string_literal_replace!("hello, world!" ("hello" -> "goodbye")),
+    "goodbye, world!"
+);
+```
