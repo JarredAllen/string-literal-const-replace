@@ -3,6 +3,17 @@
 version = 4
 
 [[package]]
+name = "macro-string"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c49a0f8c7419409eedf44cb3cf8328650023dda7aeb2fd9365ab94237d1ed32"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.93"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -24,6 +35,7 @@ dependencies = [
 name = "string-literal-const-replace"
 version = "0.1.0"
 dependencies = [
+ "macro-string",
  "proc-macro2",
  "quote",
  "syn",
