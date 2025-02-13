@@ -5,8 +5,7 @@
 //!
 //! See [`string_literal_replace!`].
 
-#![feature(proc_macro_expand)]
-
+use macro_string::MacroString;
 use proc_macro::{Literal, Span, TokenStream, TokenTree};
 
 /// Replace contents of a string literal at compile-time.
@@ -50,7 +49,7 @@ struct ParsedInput {
 
 impl syn::parse::Parse for ParsedInput {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let original_string = input.parse::<StringExpander>()?.into();
+        let MacroString(original_string) = input.parse()?;
         let mut replacements = Vec::new();
         while let Ok(group) = input.parse::<proc_macro2::Group>() {
             let Replacement { from, to } = syn::parse2(group.stream())?;
@@ -72,39 +71,9 @@ struct Replacement {
 }
 impl syn::parse::Parse for Replacement {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let from = input.parse::<StringExpander>()?.into();
+        let MacroString(from) = input.parse()?;
         input.parse::<syn::Token![->]>()?;
-        let to = input.parse::<StringExpander>()?.into();
+        let MacroString(to) = input.parse()?;
         Ok(Self { from, to })
-    }
-}
-
-/// A single string literal, parsed and maybe expanded.
-struct StringExpander {
-    /// The parsed and maybe expanded string literal.
-    expanded: String,
-}
-impl From<StringExpander> for String {
-    fn from(value: StringExpander) -> Self {
-        value.expanded
-    }
-}
-impl syn::parse::Parse for StringExpander {
-    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        use quote::ToTokens;
-
-        if let Ok(expr) = input.parse::<syn::ExprMacro>() {
-            let expression = TokenStream::from(expr.into_token_stream());
-            Ok(Self {
-                expanded: syn::parse::<syn::LitStr>(
-                    expression.expand_expr().map_err(|e| input.error(e))?,
-                )?
-                .value(),
-            })
-        } else {
-            Ok(Self {
-                expanded: input.parse::<syn::LitStr>()?.value(),
-            })
-        }
     }
 }
